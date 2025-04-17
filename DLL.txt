@@ -1,0 +1,247 @@
+//Node.java
+package demo;
+
+public class Node {
+	private int data;
+	private Node prev;
+	private Node next;
+	public Node() {
+		data=0;
+		prev=null;
+		next=null;
+	}
+	public int getData() {
+		return data;
+	}
+	public void setData(int data) {
+		this.data = data;
+	}
+	public Node getNext() {
+		return next;
+	}
+	public void setNext(Node next) {
+		this.next = next;
+	}
+	public Node getPrev() {
+		return prev;
+	}
+	public void setPrev(Node prev) {
+		this.prev = prev;
+	}
+	
+}
+
+//DoublyLinkedList.java
+package demo;
+
+import java.util.Scanner;
+
+public class DoublyLinkedList {
+	private Node head;
+	public DoublyLinkedList() {
+		head=null;
+	}
+	public void setHead(Node newnode) {
+		newnode.setPrev(null);
+		newnode.setNext(null);
+		head=newnode;
+	} 
+	public Node createNode() {
+		Node newnode=new Node();
+		newnode.setNext(null);
+		newnode.setPrev(null);
+		System.out.println("Enter data: ");
+		Scanner sc=new Scanner(System.in);
+		newnode.setData(sc.nextInt());
+		return newnode;
+	}
+	public void addAtStart() {
+		Node newnode=createNode();
+		if(head==null) {
+			head=newnode;
+		}else {
+			head.setPrev(newnode);
+			newnode.setNext(head);
+			head=newnode;
+		}
+	} 
+	public void addAtEnd() {
+		Node newnode=createNode();
+		if(head==null) {
+			head=newnode;
+		}else {
+			Node temp=head;
+			while(temp.getNext()!=null) {
+				temp=temp.getNext();
+			}
+			newnode.setPrev(temp);
+			temp.setNext(newnode);
+		}
+	}
+	public void addAtMid(int val) {
+		Node newnode=createNode();
+		if(head==null) {
+			head=newnode;
+		}else{
+			Node temp=head;
+			while(temp!=null && temp.getData()!=val) {
+				temp=temp.getNext();
+			}
+			if(temp!=null) {
+			newnode.setNext(temp.getNext());
+			newnode.setPrev(temp);
+			temp.setNext(newnode);
+			newnode.getNext().setPrev(newnode);
+			}else {
+				System.out.println("Node not found!!");
+			}
+		}
+	}
+	public void deleteAtStart() {
+		if(head==null) {
+			System.out.println("List is Empty..");
+		}else {
+			head=head.getNext();
+			head.getPrev().setNext(null);
+			head.setPrev(null);
+		}
+	}
+	public void deleteAtEnd() {
+		if(head==null) {
+			System.out.println("List is Empty!!");
+		}else if(head.getNext()==null) {
+			head=null;
+		}
+		else{
+			Node temp=head;
+			while(temp.getNext().getNext()!=null) {
+				temp=temp.getNext();
+			}
+			temp.getNext().setPrev(null);
+			temp.setNext(null);
+		}
+	}
+	
+	public void deleteAtMid(int val) {
+		if(head==null) {
+			System.out.println("List is Empty");
+		}else if(head.getNext()==null) {
+			if(head.getData()==val) {
+				head=null;
+			}else {
+				System.out.println("Node not found!!");
+			}
+		}else {
+			Node temp=head;
+			while(temp!=null && temp.getData()!=val) {
+				temp=temp.getNext();
+			}
+			if(temp!=null) {
+				temp.getNext().setPrev(temp.getPrev());
+				temp.getPrev().setNext(temp.getNext());
+				temp.setNext(null);
+				temp.setPrev(null);
+			}else {
+				System.out.println("Value Not Found!!");
+			}
+			
+		}
+	}
+	public void addByPosition(int pos) {
+		if(head==null && pos>1) {
+			System.out.println("Invalid Position");
+		}
+		if(pos==1) {
+			addAtStart();
+		}else if(pos==getCount()+1){
+			addAtEnd();
+		}else {
+			Node temp=head.getNext();
+			int count=2;
+			while(temp!=null && count!=pos) {
+				count++;
+				temp=temp.getNext();
+			}
+			Node newnode=createNode();
+			newnode.setNext(temp);
+			temp.getPrev().setNext(newnode);
+			temp.setPrev(newnode);
+			//newnode.setPrev().setNext(newnode);
+		}
+	}
+	public int getCount() {
+		int count=0;
+		if(head!=null) {
+			Node temp=head;
+			while(temp!=null) {
+				count++;
+				temp=temp.getNext();
+			}
+		}
+		return count;
+	}
+	public void Display() {
+		if(head==null) {
+			System.out.println("List is Empty");
+		}else {
+			Node temp=head;
+			while(temp!=null) {
+				System.out.print(temp.getData()+" ");
+				temp=temp.getNext();
+			}
+			System.out.println("NULL");
+		}
+	}
+	
+}
+
+//DoublyLinkedListClient.java
+package demo;
+
+import java.util.Scanner;
+
+public class DoublyLinkedListClient {
+	public static void main(String[] args) {
+		DoublyLinkedList dLL=new DoublyLinkedList();
+		Scanner sc=new Scanner(System.in);
+		int choice=-99;
+		while(choice!=0) {
+			System.out.println("Enter your choice: \n1: Add at Start \n2: Add at End \n3: Add at Mid \n4: Count \n5: Add By Position \n6: Delete at Start \n7: Delete at End \n8: Delete at Mid \n9: Display \n0: Exit");
+			choice=sc.nextInt();
+			switch(choice) {
+			case 1:
+				dLL.addAtStart();
+				break;
+			case 2:
+				dLL.addAtEnd();
+				break;
+			case 3:
+				System.out.println("Enter value after which you want to add");
+				dLL.addAtMid(sc.nextInt());
+				break;
+			case 4:
+				System.out.println("Linked List Count: "+dLL.getCount());
+				break;
+			case 5:
+				System.out.println("Enter Position: ");
+				dLL.addByPosition(sc.nextInt());
+				break;
+			case 6:
+				dLL.deleteAtStart();
+				break;
+			case 7:
+				dLL.deleteAtEnd();
+				break;
+			case 8:
+				System.out.println("Enter Value you want to delete: ");
+				dLL.addAtMid(sc.nextInt());
+				break;
+			case 9:
+				dLL.Display();
+				break;
+			case 0:
+				System.exit(0);
+			}
+		}
+	}
+}
