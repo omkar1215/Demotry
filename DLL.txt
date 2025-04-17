@@ -3,7 +3,7 @@ package demo;
 
 public class Node {
 	private int data;
-	private Node Amey;
+	private Node Kajol;
 	private Node next;
 	public Node() {
 		data=0;
